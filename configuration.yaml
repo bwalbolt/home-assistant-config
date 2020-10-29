@@ -1,0 +1,36 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+homekit:
+  filter:
+    include_entities:
+      - cover.garage_door
+
+zwave:
+  usb_path: /dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_31400341-if00-port0
+  network_key: !secret zwave_key
+  
+switch:
+  - platform: wake_on_lan
+    name: "Media PC"
+    mac: !secret media_mac
+    turn_off:
+      service: shell_command.turn_off_media_pc
+
+shell_command:
+  turn_off_media_pc: !secret turn_off_media
+
+media_player:
+  - platform: androidtv
+    name: nVIDIA Shield
+    host: 192.168.0.97
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
