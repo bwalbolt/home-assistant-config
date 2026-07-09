@@ -1,0 +1,11 @@
+- id: '1604892796571'
+  name: Sleep
+  entities:
+    cover.garage_door:
+      state: closed
+    lock.kwikset_spectrum_brands_unknown_type_0003_id_0238_locked:
+      state: locked
+    switch.ewelink_sa_003_zigbee_8e713622_on_off:
+      friendly_name: Lamp
+      state: 'off'
+  icon: hass:sleep
