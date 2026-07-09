@@ -1,0 +1,137 @@
+- id: '1778620012750'
+  alias: Garage Lights on before sunset
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: -00:30:00
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id: light.garage_lights
+    data: {}
+  mode: single
+- id: '1778620139187'
+  alias: Garage Lights off before sunrise
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunrise
+    offset: -00:40:00
+  conditions: []
+  actions:
+  - action: light.turn_off
+    metadata: {}
+    target:
+      entity_id: light.garage_lights
+    data: {}
+  mode: single
+- id: '1780023582821'
+  alias: Vacuum on weekdays
+  description: ''
+  triggers:
+  - trigger: time
+    at: 09:15:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  conditions: []
+  actions:
+  - action: vacuum.clean_area
+    metadata: {}
+    target:
+      entity_id: vacuum.vacuum
+    data:
+      cleaning_area_id:
+      - living_room
+      - front_room
+  mode: single
+- id: '1780024074780'
+  alias: Turn on Front Lamp when unlocking door at night
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - lock.smart_code_with_home_connect_technology
+    from:
+    - locked
+    to:
+    - unlocked
+  conditions:
+  - condition: device
+    type: is_on
+    device_id: 41d411126763d7c4ce7fc3ea1b40604a
+    entity_id: 7732fa2df662138c7148a9cdf78f73fa
+    domain: light
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    target:
+      entity_id: switch.ewelink_plug_03
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 2
+      seconds: 30
+      milliseconds: 0
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      entity_id: switch.ewelink_plug_03
+    data: {}
+  mode: single
+- id: '1781746770365'
+  alias: Away - evening lights
+  description: Turn lights on and off to appear home on vacation
+  triggers:
+  - trigger: sun
+    event: sunrise
+    offset: 00:30:00
+    id: turn_on
+  - trigger: time
+    at: '22:00:00'
+    id: turn_off
+  - trigger: time
+    at: '23:01:00'
+    id: turn_off_fallback
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - turn_on
+      sequence:
+      - action: switch.turn_on
+        metadata: {}
+        target:
+          entity_id: switch.ewelink_plug_02
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - turn_off
+      sequence:
+      - delay:
+          minutes: '{{ range(0, 60) | random }}'
+      - action: switch.turn_off
+        metadata: {}
+        target:
+          entity_id: switch.ewelink_plug_02
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - turn_off_fallback
+      sequence:
+      - action: switch.turn_off
+        metadata: {}
+        target:
+          entity_id: switch.ewelink_plug_02
+        data: {}
+  mode: single
