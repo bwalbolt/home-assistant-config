@@ -1,224 +1,137 @@
-- id: '1604891093730'
-  alias: Turn on Garage Lights after sunset
+- id: '1778620012750'
+  alias: Garage Lights on before sunset
   description: ''
-  trigger:
-  - platform: sun
+  triggers:
+  - trigger: sun
     event: sunset
     offset: -00:30:00
-  condition: []
-  action:
-  - domain: light
-    entity_id: light.garage_light_1_level_light_color_on_off
-    device_id: e465d551101511eb9092ade028ea6689
-    type: turn_on
-    brightness_pct: 100
-  - domain: light
-    entity_id: light.garage_light_2_level_light_color_on_off
-    device_id: e595103b101511eb810015f2296c69a4
-    type: turn_on
-    brightness_pct: 100
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id: light.garage_lights
+    data: {}
   mode: single
-- id: '1604891352513'
-  alias: Turn off Garage Lights before sunrise
+- id: '1778620139187'
+  alias: Garage Lights off before sunrise
   description: ''
-  trigger:
-  - platform: sun
+  triggers:
+  - trigger: sun
     event: sunrise
     offset: -00:40:00
-  condition: []
-  action:
-  - type: turn_off
-    device_id: e465d551101511eb9092ade028ea6689
-    entity_id: light.garage_light_1_level_light_color_on_off
-    domain: light
-  - type: turn_off
-    device_id: e595103b101511eb810015f2296c69a4
-    entity_id: light.garage_light_2_level_light_color_on_off
-    domain: light
-  mode: single
-- id: '1604891886045'
-  alias: Turn on Front Lamp when unlocking door at night
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: lock.kwikset_spectrum_brands_unknown_type_0003_id_0238_locked
-    from: locked
-    to: unlocked
-  condition:
-  - condition: device
-    type: is_on
-    device_id: 8b0b3985d1ebcb8f02872f4bce8649d5
-    entity_id: light.sengled_motion_flood_light_1_level_on_off
-    domain: light
-  action:
-  - type: turn_on
-    device_id: 507aad36221e11eba0d13d9392e46872
-    entity_id: switch.ewelink_sa_003_zigbee_8e713622_on_off
-    domain: switch
-  - delay:
-      hours: 0
-      minutes: 2
-      seconds: 30
-      milliseconds: 0
-  - type: turn_off
-    device_id: 507aad36221e11eba0d13d9392e46872
-    entity_id: switch.ewelink_sa_003_zigbee_8e713622_on_off
-    domain: switch
-  mode: single
-- id: '1634175944656'
-  alias: Turn on lights while away
-  description: ''
-  trigger:
-  - platform: sun
-    event: sunset
-    offset: +0:30
-  condition: []
-  action:
-  - type: turn_on
-    device_id: 507aad36221e11eba0d13d9392e46872
-    entity_id: switch.ewelink_sa_003_zigbee_8e713622_on_off
-    domain: switch
-  - type: turn_on
-    device_id: 2582d4479f44c417cf591e7e73839fe0
-    entity_id: switch.ewelink_sa_003_zigbee_b3fad522_on_off
-    domain: switch
-  mode: single
-- id: '1634176070073'
-  alias: Turn off lights while away
-  description: ''
-  trigger:
-  - platform: time
-    at: '23:30'
-  condition: []
-  action:
-  - type: turn_off
-    device_id: 507aad36221e11eba0d13d9392e46872
-    entity_id: switch.ewelink_sa_003_zigbee_8e713622_on_off
-    domain: switch
-  - type: turn_off
-    device_id: 2582d4479f44c417cf591e7e73839fe0
-    entity_id: switch.ewelink_sa_003_zigbee_b3fad522_on_off
-    domain: switch
-  mode: single
-- id: '1638399440879'
-  alias: Turn patio lights on at night
-  description: ''
-  trigger:
-  - platform: sun
-    event: sunset
-    offset: -0:05:00
-  condition: []
-  action:
-  - type: turn_on
-    device_id: 2fb785daab7b099727542952b79dd85f
-    entity_id: switch.outdoor_plug_1
-    domain: switch
-  mode: single
-- id: '1638399526870'
-  alias: Turn off patio lights at night
-  description: ''
-  trigger:
-  - platform: time
-    at: '18:50:00'
-  condition: []
-  action:
-  - type: turn_off
-    device_id: 2fb785daab7b099727542952b79dd85f
-    entity_id: switch.outdoor_plug_1
-    domain: switch
-  mode: single
-- id: '1670109140775'
-  alias: Turn off Christmas Lights at night
-  description: ''
-  trigger:
-  - platform: time
-    at: '21:00:00'
-  condition: []
-  action:
-  - service: switch.turn_off
+  conditions: []
+  actions:
+  - action: light.turn_off
+    metadata: {}
     target:
-      entity_id:
-      - switch.zap_1
-      - switch.zap_5
-      - switch.ewelink_sa_003_zigbee_b3fad522_on_off
+      entity_id: light.garage_lights
+    data: {}
   mode: single
-- id: '1688750371526'
-  alias: Disable vacuum camera update when docked
+- id: '1780023582821'
+  alias: Vacuum on weekdays
   description: ''
-  use_blueprint:
-    path: PiotrMachowski/disable_vacuum_camera_update_when_docked.yaml
-    input:
-      vacuum: vacuum.roborock_s7
-      camera: camera.xiaomi_cloud_map_extractor
-- id: '1696656463743'
-  alias: iOS Action - Toggle Plant Light
-  description: ''
-  trigger:
-  - platform: event
-    event_type: ios.action_fired
-    event_data:
-      actionName: Toggle Plant Light
-  condition: []
-  action:
-  - type: toggle
-    device_id: 2582d4479f44c417cf591e7e73839fe0
-    entity_id: switch.ewelink_sa_003_zigbee_b3fad522_on_off
-    domain: switch
-  mode: single
-- id: '1700603377256'
-  alias: Run Vacuum on Weekdays
-  description: ''
-  trigger:
-  - platform: time
+  triggers:
+  - trigger: time
     at: 09:15:00
-  condition:
-  - condition: time
     weekday:
     - mon
     - tue
     - wed
     - thu
     - fri
-  action:
-  - service: xiaomi_miio.vacuum_clean_zone
+  conditions: []
+  actions:
+  - action: vacuum.clean_area
+    metadata: {}
     target:
-      entity_id: vacuum.roborock_s7
+      entity_id: vacuum.vacuum
     data:
-      zone:
-      - - 15032
-        - 21354
-        - 17590
-        - 22995
-      - - 15510
-        - 19821
-        - 20389
-        - 21370
-      - - 18833
-        - 18227
-        - 21437
-        - 19959
-      - - 21712
-        - 17048
-        - 27866
-        - 20236
-      - - 21712
-        - 20234
-        - 24543
-        - 24288
-      repeats: 1
+      cleaning_area_id:
+      - living_room
+      - front_room
   mode: single
-- id: '1701465682890'
-  alias: Turn on Christmas Lights at night
+- id: '1780024074780'
+  alias: Turn on Front Lamp when unlocking door at night
   description: ''
-  trigger:
-  - platform: time
-    at: '17:00:00'
-  condition: []
-  action:
-  - service: switch.turn_on
+  triggers:
+  - trigger: state
+    entity_id:
+    - lock.smart_code_with_home_connect_technology
+    from:
+    - locked
+    to:
+    - unlocked
+  conditions:
+  - condition: device
+    type: is_on
+    device_id: 41d411126763d7c4ce7fc3ea1b40604a
+    entity_id: 7732fa2df662138c7148a9cdf78f73fa
+    domain: light
+  actions:
+  - action: switch.turn_on
+    metadata: {}
     target:
-      entity_id:
-      - switch.zap_1
-      - switch.zap_5
-      - switch.ewelink_sa_003_zigbee_b3fad522_on_off
+      entity_id: switch.ewelink_plug_03
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 2
+      seconds: 30
+      milliseconds: 0
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      entity_id: switch.ewelink_plug_03
+    data: {}
+  mode: single
+- id: '1781746770365'
+  alias: Away - evening lights
+  description: Turn lights on and off to appear home on vacation
+  triggers:
+  - trigger: sun
+    event: sunrise
+    offset: 00:30:00
+    id: turn_on
+  - trigger: time
+    at: '22:00:00'
+    id: turn_off
+  - trigger: time
+    at: '23:01:00'
+    id: turn_off_fallback
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - turn_on
+      sequence:
+      - action: switch.turn_on
+        metadata: {}
+        target:
+          entity_id: switch.ewelink_plug_02
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - turn_off
+      sequence:
+      - delay:
+          minutes: '{{ range(0, 60) | random }}'
+      - action: switch.turn_off
+        metadata: {}
+        target:
+          entity_id: switch.ewelink_plug_02
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - turn_off_fallback
+      sequence:
+      - action: switch.turn_off
+        metadata: {}
+        target:
+          entity_id: switch.ewelink_plug_02
+        data: {}
   mode: single

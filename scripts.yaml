@@ -1,0 +1,44 @@
+pause_tv:
+  alias: Pause TV
+  description: Pause Living Room TV
+  icon: mdi:television-pause
+  sequence:
+  - action: media_player.media_play_pause
+    target:
+      entity_id: media_player.living_room_tv
+  mode: single
+vacuum_shortcut:
+  alias: Vacuum Shortcut
+  mode: single
+  fields:
+    command:
+      name: Command
+      selector:
+        select:
+          options:
+          - clean_area
+          - dock
+      required: true
+    area:
+      name: Area
+      selector:
+        area:
+          multiple: true
+  sequence:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ command == ''dock'' }}'
+      sequence:
+      - action: vacuum.return_to_base
+        target:
+          entity_id: vacuum.vacuum
+    - conditions:
+      - condition: template
+        value_template: '{{ command == ''clean_area'' }}'
+      sequence:
+      - action: vacuum.clean_area
+        target:
+          entity_id: vacuum.vacuum
+        data:
+          cleaning_area_id: '{{ area }}'

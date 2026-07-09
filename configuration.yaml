@@ -1,60 +1,29 @@
 
-# Configure a default setup of Home Assistant (frontend, api, etc)
+# Loads default set of integrations. Do not remove.
 default_config:
 
-namecheapdns:
-  domain: !secret ha_domain
-  password: !secret namecheap_password
-  
 http:
-  # nginx handles ssl
-  # server_port: 443
-  # ssl_certificate: /ssl/fullchain.pem
-  # ssl_key: /ssl/privkey.pem
   use_x_forwarded_for: true
   trusted_proxies:
-    - 172.30.33.0/24
-  
+    - 192.168.0.103
+  ip_ban_enabled: true
+  login_attempts_threshold: 3
+
 homeassistant:
   auth_providers:
     - type: trusted_networks
       trusted_networks:
         - 192.168.0.0/24
       trusted_users:
-        192.168.0.0/24: 96fb8a4eb1b84f26ab9aac80ea1579f7
+        192.168.0.0/24: 22bae4d2849349f6a0e85324fd8597b7
       allow_bypass_login: true
     - type: homeassistant
-    
-lovelace:
-  mode: storage
-  dashboards:
-    lovelace-generated:
-      mode: yaml
-      filename: notexist.yaml
-      title: Generated
-      icon: mdi:tools
-      show_in_sidebar: true
-      require_admin: true
 
-# Text to speech
-tts:
-  - platform: google_translate
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
 
-homekit:
-  filter:
-    include_entities:
-      - cover.garage_door
-
-zwave:
-  usb_path: /dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_31400341-if00-port0
-  network_key: !secret zwave_key
-  
 switch:
-  - platform: wake_on_lan
-    name: "Media PC"
-    mac: !secret media_mac
-    turn_off:
-      service: shell_command.turn_off_media_pc
   - platform: broadlink
     mac: !secret broadlink_mac
     switches:
@@ -74,51 +43,12 @@ switch:
         command_on: sMCwBGibBgAFFAQUBBQQCAQUEQcFFBAIBBQQCRAIEAcFFBAIBBUQBwQVBBQEFAQUBBQEFQ8JEAgEvQQUBBQFFBAIBBQQCAQUEAkEFBAIEAgQCQQVDwgFFBAIBBQEFAQVBBUEFAQUEAgQCAS+BBQEFAQUEAgEFBEIBBQQCAQUEAkPCRAIBBQQCAQUEAgFFAQUBBQEFAQVBBUQCBAIBL0EFAQUBBUQCAQUEAgEFQ8JBBQQCBAIEAkEFRAIBBQQCAQUBBQEFQQUBBQEFBAIEAkEvQQUBBQEFBAIBRQQCAQUEAgEFBAIEQgQCAQUEAgFExAKBBQEFAQUBBQEFQQUEAgQCAS9BBUEFAQUEAgEFBAJBBUQCAQUEAgQCBAIBRQQCAQUEAgEFQQVBBQEFAQUBBQQCBEIBL0EFAQVBBUPCQQUEAgEFBAJBBQQCBAIEAkEFBEIBBUQCAQUBBQEFAUUBBQEFBAIEAgEvgQUBBQEFBAIBBUQCAQUEAgEFBEHEQgQCQQUEQgEFBAIBBUEFAQUBBQEFQQUEAgQCQS9BBUEFQQUEAgEFQ8JBBQQCAQUEAgQCBAJBBQQCAQUEAkEFQQUBBQEFAQUBBUQCBAIBL0EFAQVBBUQCAQUEAgEFBAJBBUQCBAIEAgEFRAIBBQQCAQUBBQEFQQUBBQEFBAIEAkEvgQUBBQEFBAJBBUQCAQUEAgEFRAIEAgQCAQUEAgEFREGBRQEMBkUBBQQCBAIBL0EFQQUBBQQCQQVEAgEFBAIBBQQCBEHEQgEFBAIBBQQCQQUBBQEFAQUBBUEFRAIEAgEvQQUBRQEFBAIBBUPCQQVDwkEFBAIEAkPCQQUEAgEFBAIBBUEFQQVBBQEFAQVDwkQCAS9BBQEFQQVEAgEFBAIBBUQCAQVEQcQCBAJBBUPCQQUEAgFEwQVBBUEFQQUBBQQCBAJBL4EFAQUBBQQCAUUEAgEFBAJBBUPCRAIEAgEFBAJBBQQCAQUBBQEFAQVBBUEFBAIEAgFvQQUBBQEFBAJBBUQCAQUEAgEFBAJEAgQCAQVDwkEFRAIBBQEFAQUBBUEFAQVEAgQCAS+BBQEFAQVDwgEFBEIBBQQCAQUEAkPCBEIBBQQCAUTEAkEFAQUBBQEFAUTBBQRCBAIBL0EFQQUBBQQCAQUEAgEFRAIBBQQCBAJEAgEFBAIBBQQCQQVBBQEFAQUBBQFExEIEAgEvQQUBBQFFBAIBBQQCAQVEAgEExEIEAgQCQQVEAgEFBAIBBQEFQQUBBQEFAQVDwkQCAS9BBQEFAUUEAgEFBAIBBQRCAQUEAgQCBAJBBQRCAQUEAgEFAQVBBUEFAQUBBQQCRAIBL4EFAQUBBQRCAQUEAgEFBAIBRQQCBAIEAgEFBAIBRQQCAQUBBQEFQQVBBQEFBAIEAkEvgQUBBQEFBAJBBQQCAQUEAgEFBEIEAgQCAQVEAgEFRAIBBQEFQQUBBUEFAQUEAgQCAS+BBQEFAQUEAkEFBAIBBQQCAQUEAgRCBAIBBQQCQQVEAgEFAQUBBUEFQQUBBQQCBAIBL0FFAQUBBQQCAQUEQgEFBAIBBUQBxEIEAgEFBAIBBUQCAQUBBQEFAQUBBUEFBAIEAgEvQ==
         command_off: scCwBGCeBgAHEgYSEgYGEhIGBhISBwUTEgYSBhIHBRMRBwUUEAcFFAQUBRMFExEHEQgEFAUTBbwFEwUTBhISBwUTEQcFExEIBBQRBxEHEQcFFBAIBBQRBwUTBRMFFAQUEAgRBwYTBBMFvQUTBRMFExEHBRMRCAUTEQcFExEIEAgQCAQUEQcFExEIBBQEFAUTBRMRCBAIBBQEFAW8BRMFFAQUEQcFExEHBRQQCAUTEQcRBxEHBRQQCAUTEQcFEwUUBBQEFBEHEQcFFAQUBL0FFAQTBRQQCAQUEAgFExEHBRQQCBEHEQcFExEIBBQQCAQUBRMFEwUUEQcQCAUTBRMFvAUUBRMFExEHBRQQCAQUEQcFExEIEAgQCAQUEAgFExEIBBQEFAUTBRMRCBAIBBQEFAW8BRQGEgQUEQcFExEIBBMRCAQUEQcRCBAIBBQQCAQUEQgEFAQUBBQEFBEHEQcFFAQUBL0FEwUTBRQRBwUTEQkEExEHBRQQCBEHEQcFFBAIBBQQCAUTBRMFFAQUEAgRBwUTBRMFvQQUBRMFExEHBRMRCAUTEQcFExEHEQgQCAUTEQgEFBAIBBQEFAUTBRQQCBAIBBQFEwW9BBQEFAUTEQcFExEHBRQRBwUTEQcRCBAIBBQRBwUTEQcFFAQUBRMFExEHEQgEFAQUBbwFEwUUBBQQCAUTEQcFExEIBBQRBxEHEQcFFBAIBBQRBwUTBRMFFAQUEQcRCAQTBRQEvQUTBRMFFBAIBBQRBwUTEQgEFBEHEQcRBwUUEAgEFBAIBRMFEwUTBRQQCBEHBRMFFAS9BBQFEwUTEQcFFBAIBRMRBwUTEQgQCBAIBRMRCAQUEAgEFAUTBRMFExEIEAgEFAUTBb0EFAQUBRMRBwUTEQgFExEHBRMRBxEIEAgEFBEHBRQQCAQUBBQFEwUTEQgQCAQUBBQFvAUUBBQFExEHBRMRCAQUEAgFExEHEQgQCAQUEQcFExEIBBQEFAQUBRMRBxEIBBQEFAW8BRMFEwUUEQcFExEHBRMRCAUTEQcRBxEIBBQQCAQUEQcFEwUUBBQEFBEHEQgEFAQUBL0FEwUTBRQQCAUTEQcFExEIBBQRBxEHEQcFFBAIBBQRBwUTBRQEFAQUEQcRBwUUBBQEvQUTBRMFExEIBBQRBwUTEQgEFBAIEQgQBwUTEQgEFBEHBRMFEwUUBBQRBxEHBRMFFAS9BRMFEwUTEQcFFBEHBRMRCAQUEAgQCBEHBRMRCAQUEAgEFAUTBRMFFBAIEQcFEwUTBb0FEwUTBRMRCAQUEAgFExEHBRQQCBAIEAgFExEHBRQQCAQUBRMFEwUTEQgQCAQUBRMFvQQUBRMFExEHBRMRCAUTEQcFExEIEAgQCAUTEQcFFBAIBBQEFAUTBRMRCBAIBBQFEwW8BRQFEwUTEQcFExEHBRQRBwUTEQcRCBAIBBQRBwUUEAgEFAQUBRMFExEIEAgEFAUTBb0EFAQUBRMRBwUTEQgEFBEHBRMRCBAIEAgEFBEHBRMRCAQUBBQFEwUTEQgQCAQUBRMFvQQUBBQEFBEHBRQQCAQUEQcFExEHEQgQCQQTEQcFExEIBBQEFAQUBRMRBxEIBBQFEw==
 
-light:
-  - platform: group
-    name: Garage Lights
-    entities:
-      - light.garage_light_1_level_light_color_on_off
-      - light.garage_light_2_level_light_color_on_off
-  - platform: group
-    name: Motion Lights
-    entities:
-      - light.sengled_motion_flood_light_1_level_on_off
-      - light.sengled_motion_flood_light_2_level_on_off
-      - light.sengled_motion_flood_light_east_3_level_on_off
-      - light.sengled_motion_flood_light_east_4_level_on_off
-  - platform: group
-    name: Front Porch Light
-    entities:
-      - light.100120042462ab19148a
-      - light.44462287d8bfc0d664de
-      
-camera:
-  - platform: generic
-    name: nursery
-    still_image_url: !secret camera_url_1
-    stream_source: !secret camera_source_1
-  - platform: generic
-    name: hayden
-    still_image_url: !secret camera_url_2
-    stream_source: !secret camera_source_2
 
-shell_command:
-  turn_off_media_pc: !secret turn_off_media
-
-media_player:
-  - platform: androidtv
-    name: Bedroom Shield
-    host: 192.168.0.97
-  - platform: androidtv
-    name: Living Room Shield
-    host: 192.168.0.96
-      
-sensor:
-  - platform: template
-    sensors:
-      roborock_icon:
-        value_template: '{{ states.vacuum.roborock_s7.attributes.battery_icon }}'
+template:
+- sensor:
+  - default_entity_id: sensor.roborock_icon
+    state: '{{ states.vacuum.roborock_s7.attributes.battery_icon }}'
+    name: roborock_icon
 
 ios:
   actions:
@@ -155,7 +85,7 @@ ios:
         icon: string-lights
         color: "#ffffff"
 
-group: !include groups.yaml
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
